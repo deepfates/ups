@@ -59,7 +59,7 @@ export function ImageCapture({ onImageCapture, disabled }: Props) {
           <X className="w-4 h-4" />
         </button>
         <figcaption className="text-center py-2 text-sm text-[var(--color-ink-muted)] italic border-t border-[var(--color-border)]">
-          <strong>Figure 1.</strong> Input image for classification
+          Input image for classification
         </figcaption>
       </div>
     );

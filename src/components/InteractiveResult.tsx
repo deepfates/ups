@@ -68,12 +68,8 @@ export function InteractiveResult({ test, initialScores }: Props) {
       <section>
         <h2>2. Classification Result</h2>
         
-        <p>
-          Based on the extracted features, the subject is classified as{" "}
-          <strong>{category.name}</strong> ({category.description}).
-        </p>
-        <p className="text-center" style={{ fontSize: "2.5rem", margin: "1rem 0" }}>
-          {category.content.emoji}
+        <p className="result-emphasis">
+          {category.content.emoji} <strong>{category.name}</strong> — {category.description}
         </p>
       </section>
 
