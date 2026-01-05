@@ -1,6 +1,6 @@
 /**
  * InteractiveResult component — displays result with radar chart and data table.
- * Styled like a scientific paper figure with proper captions.
+ * Uses latex.css for styling, minimal custom overrides.
  */
 
 import { useState, useMemo } from "react";
@@ -63,96 +63,76 @@ export function InteractiveResult({ test, initialScores }: Props) {
   };
 
   return (
-    <article className="space-y-10">
+    <article>
       {/* Section: Classification Result */}
       <section>
-        <h2 className="text-lg font-semibold mb-3 border-b border-[var(--color-ink)] pb-1">
-          2. Classification Result
-        </h2>
+        <h2>2. Classification Result</h2>
         
-        {/* Result Box - Theorem Style */}
-        <div className="p-5 bg-[var(--color-figure-bg)] border border-[var(--color-border)] border-l-4 border-l-[var(--color-ink)]">
-          <p className="text-sm text-[var(--color-ink-muted)] mb-2">
-            <strong>Classification:</strong>
-          </p>
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">{category.content.emoji}</span>
-            <div>
-              <h3 className="text-xl font-semibold m-0">{category.name}</h3>
-              <p className="text-[var(--color-ink-muted)] italic text-sm m-0">
-                {category.description}
-              </p>
-            </div>
-          </div>
-        </div>
+        <p>
+          Based on the extracted features, the subject is classified as{" "}
+          <strong>{category.name}</strong> ({category.description}).
+        </p>
+        <p className="text-center" style={{ fontSize: "2.5rem", margin: "1rem 0" }}>
+          {category.content.emoji}
+        </p>
       </section>
 
       {/* Section: Score Visualization */}
       <section>
-        <h2 className="text-lg font-semibold mb-3 border-b border-[var(--color-ink)] pb-1">
-          3. Dimensional Analysis
-        </h2>
+        <h2>3. Dimensional Analysis</h2>
 
         {/* Radar Chart Figure */}
-        <figure className="border border-[var(--color-border)] bg-white p-4 mb-4">
+        <figure>
           <ScoreRadarChart scores={currentScores} />
-          <figcaption className="text-center text-[0.85rem] text-[var(--color-ink-muted)] italic mt-2">
-            <strong>Figure 2:</strong> Radar plot of extracted dimensional scores (n=3).
+          <figcaption>
+            Radar plot of extracted dimensional scores (n=3).
             {isAdjusted && " User-adjusted values shown."}
           </figcaption>
         </figure>
 
         {/* Data Table */}
-        <div className="border border-[var(--color-border)] bg-white p-4">
-          <ScoreTable 
-            scores={currentScores} 
-            title="Dimensional feature extraction results" 
-          />
-        </div>
+        <ScoreTable scores={currentScores} />
       </section>
 
       {/* Section: Interpretation */}
       <section>
-        <h2 className="text-lg font-semibold mb-3 border-b border-[var(--color-ink)] pb-1">
-          4. Interpretation
-        </h2>
+        <h2>4. Interpretation</h2>
 
-        <div className="prose prose-sm max-w-none">
-          <p className="text-justify hyphens-auto leading-relaxed mb-4">
-            {category.content.body}
-          </p>
+        <p>{category.content.body}</p>
 
-          {/* Keywords */}
-          <p className="text-sm text-[var(--color-ink-muted)] mb-3">
+        <p>
+          <em>
             <strong>Keywords:</strong>{" "}
-            {category.content.traits.map((trait, i) => (
-              <span key={trait}>
-                <em>{trait.toLowerCase()}</em>
-                {i < category.content.traits.length - 1 ? ", " : ""}
-              </span>
-            ))}
-          </p>
+            {category.content.traits.map((t) => t.toLowerCase()).join(", ")}.
+          </em>
+        </p>
 
-          {/* Remark Box */}
-          {category.content.advice && (
-            <div className="bg-amber-50 border border-amber-200 border-l-[3px] border-l-amber-500 p-3 text-[0.9rem] not-italic">
-              <strong>Remark 1.</strong> {category.content.advice}
-            </div>
-          )}
-        </div>
+        {/* Remark Box */}
+        {category.content.advice && (
+          <blockquote>
+            <strong>Remark.</strong> {category.content.advice}
+          </blockquote>
+        )}
       </section>
 
-      {/* Parameters - Collapsible */}
+      {/* Parameters - Collapsible Appendix */}
       <Collapsible.Root open={parametersOpen} onOpenChange={setParametersOpen}>
-        <section className="border border-[var(--color-border)]">
+        <section>
           <Collapsible.Trigger asChild>
-            <button className="w-full flex justify-between items-center p-3 bg-[var(--color-figure-bg)] hover:bg-[var(--color-paper-dark)] transition-colors border-b border-[var(--color-border)]">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--color-ink-light)] m-0">
+            <button 
+              className="w-full flex justify-between items-center p-3 text-left"
+              style={{ 
+                background: "var(--body-bg-color)", 
+                border: "1px solid var(--table-border-color, #000)",
+                cursor: "pointer"
+              }}
+            >
+              <span style={{ fontSize: "0.9rem", fontWeight: 500 }}>
                 Appendix: Parameter Adjustment
-              </h2>
+              </span>
               <ChevronDown
                 className={cn(
-                  "w-4 h-4 text-[var(--color-ink-muted)] transition-transform",
+                  "w-4 h-4 transition-transform",
                   parametersOpen && "rotate-180"
                 )}
               />
@@ -160,16 +140,32 @@ export function InteractiveResult({ test, initialScores }: Props) {
           </Collapsible.Trigger>
 
           <Collapsible.Content>
-            <div className="p-4 bg-white">
-              <p className="text-sm text-[var(--color-ink-muted)] italic mb-4">
-                Adjust parameters to explore alternative classifications. 
-                The radar chart and table update in real-time.
+            <div 
+              className="p-4" 
+              style={{ 
+                border: "1px solid var(--table-border-color, #000)",
+                borderTop: "none"
+              }}
+            >
+              <p className="no-indent">
+                <em>Adjust parameters to explore alternative classifications. 
+                The radar chart and table update in real-time.</em>
               </p>
 
               {isAdjusted && (
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1.5 text-[var(--color-accent)] text-[0.8rem] font-mono mb-4 hover:underline"
+                  style={{ 
+                    color: "var(--link-visited, hsl(0, 100%, 33%))",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    marginBottom: "1rem"
+                  }}
                 >
                   <RotateCcw className="w-3 h-3" />
                   Reset to observed values
@@ -190,20 +186,24 @@ export function InteractiveResult({ test, initialScores }: Props) {
               </div>
 
               {/* Category Quick Select */}
-              <div className="mt-6 pt-4 border-t border-[var(--color-border)]">
-                <p className="text-xs text-[var(--color-ink-muted)] uppercase tracking-wider mb-2">
-                  Classification Outcomes:
+              <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid #ccc" }}>
+                <p className="no-indent" style={{ fontSize: "0.8rem", marginBottom: "0.5rem" }}>
+                  <em>Quick classification presets:</em>
                 </p>
                 <div className="grid grid-cols-4 gap-2">
                   {test.categories.map((cat) => (
                     <button
                       key={cat.id}
-                      className={cn(
-                        "py-2 px-2 text-[0.8rem] border transition-all text-center",
-                        cat.id === categoryId
-                          ? "bg-[var(--color-ink)] border-[var(--color-ink)] text-white"
-                          : "bg-[var(--color-figure-bg)] border-[var(--color-border)] text-[var(--color-ink-light)] hover:bg-[var(--color-paper-dark)]"
-                      )}
+                      style={{
+                        padding: "0.5rem",
+                        fontSize: "0.8rem",
+                        border: "1px solid",
+                        borderColor: cat.id === categoryId ? "var(--body-color)" : "#ccc",
+                        background: cat.id === categoryId ? "var(--body-color)" : "transparent",
+                        color: cat.id === categoryId ? "var(--body-bg-color)" : "inherit",
+                        cursor: "pointer",
+                        borderRadius: 0
+                      }}
                       onClick={() => {
                         if (cat.id === "spring")
                           setScores({ warmth: 8, saturation: 8, value: 4 });

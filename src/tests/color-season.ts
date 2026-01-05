@@ -1,7 +1,7 @@
 /**
  * Color Season Analysis Test
  * 
- * The classic "what color season are you?" based on:
+ * The classic "What's Your Season?" based on:
  * - Warmth (cool to warm tones)
  * - Saturation (muted to vibrant)
  * - Value/Contrast (light to dark)
@@ -13,7 +13,7 @@ import type { VisualTest } from "../core/types";
 
 export const colorSeason: VisualTest = {
   id: "color-season",
-  name: "What Color Season Are You?",
+  name: "What's Your Season?",
   
   dimensions: [
     {

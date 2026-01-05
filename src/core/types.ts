@@ -35,7 +35,7 @@ export interface Category {
  */
 export interface VisualTest {
   id: string;
-  name: string;             // Display name, e.g., "What color season are you?"
+  name: string;             // Display name, e.g., "What's Your Season?"
   dimensions: Dimension[];
   categories: Category[];
   

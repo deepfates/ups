@@ -60,108 +60,97 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col gap-10">
-      {/* Title Block */}
-      <header className="text-center pb-4 border-b-2 border-[var(--color-ink)]">
-        <h1 className="text-xl font-semibold tracking-tight mb-1">
-          {colorSeason.name}
-        </h1>
-        <p className="text-sm text-[var(--color-ink-muted)] italic">
-          A Visual Classification System for Color Palette Analysis
-        </p>
+    <>
+      {/* Title */}
+      <header className="author">
+        <h1>{colorSeason.name}</h1>
+        <p>A Visual Classification System for Color Palette Analysis</p>
       </header>
 
-      <main className="flex flex-col gap-8">
-        {/* Abstract - only show before upload */}
-        {state.phase === "capture" && !imageBase64 && (
-          <section>
-            <h2 className="section-heading">Abstract</h2>
-            <p className="text-justify hyphens-auto leading-relaxed text-[0.9rem]">
-              This system implements a three-phase visual classification pipeline:
-              (1) parallel VLM-based dimensional feature extraction,
-              (2) deterministic category mapping,
-              (3) pre-computed result interpretation.
-            </p>
-          </section>
+      {/* Abstract - only show before upload */}
+      {state.phase === "capture" && !imageBase64 && (
+        <div className="abstract">
+          <h2>Abstract</h2>
+          <p>
+            This system implements a three-phase visual classification pipeline:
+            (1) parallel VLM-based dimensional feature extraction,
+            (2) deterministic category mapping,
+            (3) pre-computed result interpretation.
+          </p>
+        </div>
+      )}
+
+      {/* Input Section */}
+      <section>
+        <h2>1. Input</h2>
+
+        {state.phase === "capture" && (
+          <>
+            <ImageCapture onImageCapture={handleImageCapture} disabled={false} />
+            {imageBase64 && (
+              <button className="analyze-button" onClick={handleAnalyze}>
+                Run Classification →
+              </button>
+            )}
+          </>
         )}
 
-        {/* Input Section */}
-        <section>
-          <h2 className="section-heading">1. Input</h2>
-
-          {state.phase === "capture" && (
-            <>
-              <ImageCapture onImageCapture={handleImageCapture} disabled={false} />
-              {imageBase64 && (
-                <button className="analyze-button" onClick={handleAnalyze}>
-                  Run Classification →
-                </button>
-              )}
-            </>
-          )}
-
-          {state.phase === "loading" && (
-            <div className="space-y-3">
-              {/* Small figure for loading */}
-              <figure className="input-figure">
-                <img src={state.imagePreview} alt="Input" />
-                <figcaption>
-                  <strong>Fig. 1:</strong> Input image under analysis
-                </figcaption>
-              </figure>
-              <div className="flex items-center justify-center gap-2 py-3 text-[var(--color-ink-muted)] italic text-sm">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Extracting {colorSeason.dimensions.length} dimensional features...
-              </div>
-            </div>
-          )}
-
-          {state.phase === "error" && (
-            <div className="space-y-3">
-              {state.imagePreview && (
-                <figure className="input-figure">
-                  <img src={state.imagePreview} alt="Error" className="opacity-50" />
-                </figure>
-              )}
-              <div className="bg-red-50 border border-red-200 p-3 text-red-800 text-sm">
-                <strong>Error.</strong> {state.error}
-              </div>
-              <button className="reset-button-main" onClick={handleReset}>
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {state.phase === "result" && (
+        {state.phase === "loading" && (
+          <>
             <figure className="input-figure">
               <img src={state.imagePreview} alt="Input" />
-              <figcaption>
-                <strong>Fig. 1:</strong> Input image (n = 1)
-              </figcaption>
+              <figcaption>Input image under analysis</figcaption>
             </figure>
-          )}
-        </section>
+            <p className="text-center">
+              <em>
+                <Loader2 className="inline w-4 h-4 animate-spin" style={{ marginRight: "0.5rem" }} />
+                Extracting {colorSeason.dimensions.length} dimensional features...
+              </em>
+            </p>
+          </>
+        )}
 
-        {/* Results */}
-        {state.phase === "result" && (
+        {state.phase === "error" && (
           <>
-            <InteractiveResult
-              test={colorSeason}
-              initialScores={state.result.scores}
-            />
-
-            {/* Metadata */}
-            <div className="text-center text-xs font-mono text-[var(--color-ink-muted)] pt-3 border-t border-[var(--color-border)]">
-              t<sub>total</sub> = {state.result.meta.totalLatencyMs}ms | model = {state.result.meta.model}
-            </div>
-
+            {state.imagePreview && (
+              <figure className="input-figure">
+                <img src={state.imagePreview} alt="Error" style={{ opacity: 0.5 }} />
+              </figure>
+            )}
+            <p><strong>Error.</strong> {state.error}</p>
             <button className="reset-button-main" onClick={handleReset}>
-              New Analysis
+              Try Again
             </button>
           </>
         )}
-      </main>
-    </div>
+
+        {state.phase === "result" && (
+          <figure className="input-figure">
+            <img src={state.imagePreview} alt="Input" />
+            <figcaption>Input image (n = 1)</figcaption>
+          </figure>
+        )}
+      </section>
+
+      {/* Results */}
+      {state.phase === "result" && (
+        <>
+          <InteractiveResult
+            test={colorSeason}
+            initialScores={state.result.scores}
+          />
+
+          {/* Metadata */}
+          <p className="text-center" style={{ fontSize: "0.75rem", fontFamily: "monospace", marginTop: "2rem" }}>
+            t<sub>total</sub> = {state.result.meta.totalLatencyMs}ms | model = {state.result.meta.model}
+          </p>
+
+          <button className="reset-button-main" onClick={handleReset}>
+            New Analysis
+          </button>
+        </>
+      )}
+    </>
   );
 }
 

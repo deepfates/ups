@@ -53,7 +53,7 @@ describe("Color Season Classification", () => {
   describe("test configuration", () => {
     it("has correct structure", () => {
       expect(colorSeason.id).toBe("color-season");
-      expect(colorSeason.name).toBe("What Color Season Are You?");
+      expect(colorSeason.name).toBe("What's Your Season?");
       expect(colorSeason.dimensions).toHaveLength(3);
       expect(colorSeason.categories).toHaveLength(4);
     });
