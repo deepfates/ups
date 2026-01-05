@@ -1,0 +1,144 @@
+/* ==========================================================================
+   UPS - Using LaTeX.css with custom overrides
+   ========================================================================== */
+
+@import "tailwindcss";
+
+/* Import the actual LaTeX.css for all the good stuff */
+@import "latex.css/style.css";
+
+@theme {
+  /* Keep custom color tokens for Tailwind */
+  --color-paper: hsl(210, 20%, 98%);
+  --color-ink: hsl(0, 5%, 10%);
+  --color-ink-light: hsl(0, 5%, 30%);
+  --color-ink-muted: hsl(0, 0%, 45%);
+  --color-accent: hsl(0, 100%, 33%);
+  --color-border: hsl(0, 0%, 70%);
+  --color-figure-bg: hsl(210, 20%, 96%);
+  --color-paper-dark: hsl(210, 20%, 94%);
+}
+
+/* ==========================================================================
+   Layout Overrides
+   ========================================================================== */
+
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Override LaTeX.css body to use grid centering */
+body {
+  display: grid;
+  place-items: center;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  max-width: 72ch;
+  padding: 3rem 2rem;
+}
+
+/* ==========================================================================
+   Component Styles
+   ========================================================================== */
+
+/* Section heading */
+.section-heading {
+  font-size: 1.17rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--color-ink);
+}
+
+/* Input figure - small contained image */
+.input-figure {
+  display: block;
+  max-width: 240px;
+  margin: 1.5rem auto;
+  border: 1px solid var(--color-border);
+  background: white;
+}
+
+.input-figure img {
+  width: 100%;
+  display: block;
+}
+
+.input-figure figcaption {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  border-top: 1px solid var(--color-border);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.analyze-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  color: white;
+  background: var(--color-ink);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 1rem;
+}
+
+.analyze-button:hover:not(:disabled) {
+  background: var(--color-ink-light);
+}
+
+.analyze-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reset-button-main {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-ink-light);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.reset-button-main:hover {
+  background: var(--color-paper-dark);
+  color: var(--color-ink);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  #root {
+    padding: 2rem 1.25rem;
+  }
+
+  .input-figure {
+    max-width: 200px;
+  }
+}
