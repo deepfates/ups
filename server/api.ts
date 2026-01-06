@@ -13,7 +13,8 @@ const ai = new AxAI({
   name: "openrouter",
   apiKey: process.env.OPENROUTER_API_KEY ?? "",
   config: {
-    model: "google/gemini-2.0-flash-001",
+    model: "google/gemini-3-flash-preview",
+    temperature: 0,
   },
 });
 

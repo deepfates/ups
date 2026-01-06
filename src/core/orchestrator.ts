@@ -63,7 +63,7 @@ export async function runVisualTest(
       totalLatencyMs,
       judgeLatencyMs,
       explainerLatencyMs: 0, // No explainer call needed
-      model: "gemini-2.0-flash",
+      model: "gemini-3-flash",
       failedDimensions: failed,
     },
   };
