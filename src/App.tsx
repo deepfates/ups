@@ -118,9 +118,6 @@ function TestPage({ test }: { test: VisualTest }) {
       {/* Title */}
       <header className="author">
         <h1>{test.name}</h1>
-        <p>
-          <a href="#/" style={{ fontSize: "0.9rem" }}>← All Tests</a>
-        </p>
       </header>
 
       {/* Abstract - only show before upload */}
@@ -202,6 +199,10 @@ function TestPage({ test }: { test: VisualTest }) {
           <button className="reset-button-main" onClick={handleReset}>
             New Analysis
           </button>
+
+          <p className="text-center" style={{ marginTop: "2rem" }}>
+            <a href="#/">← Take Another Test</a>
+          </p>
         </>
       )}
     </>
