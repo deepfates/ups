@@ -108,16 +108,4 @@ export const colorSeason: VisualTest = {
   },
 };
 
-/**
- * Registry of all available tests.
- */
-export const tests: Record<string, VisualTest> = {
-  [colorSeason.id]: colorSeason,
-};
-
-export function getTest(id: string): VisualTest | undefined {
-  return tests[id];
-}
-
-// Re-export for convenience
-export { colorSeason as defaultTest };
+// Tests registry is now in index.ts
