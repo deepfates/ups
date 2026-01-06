@@ -1,80 +1,70 @@
-# UPS - Visual Judgment Framework
+# Universal Persona System (UPS)
 
-A configurable "visual personality test" framework. Upload a photo, VLM judges extract features, deterministic logic maps to a category, pre-written content displays instantly.
+A visual personality test framework. Upload a photo, VLM judges extract features, deterministic logic maps to a category, pre-written content displays instantly.
+
+**Demo**: Color Season Analysis — determines your seasonal color palette from a selfie.
 
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Install
 bun install
 
-# Start API server (requires OPENROUTER_API_KEY in .env)
-bun run server
+# Set your API key
+cp .env.example .env
+# Edit .env with your OPENROUTER_API_KEY
 
-# Start frontend dev server (separate terminal)
-bun run dev
+# Start server + frontend
+bun run server    # Terminal 1
+bun run dev       # Terminal 2
 
 # Open http://localhost:5173
 ```
 
-## Architecture
+## How It Works
 
 ```
-              VLM ZONE                          CODE ZONE
-         ┌────────────────┐              ┌─────────────────────┐
-         │  Parallel VLM  ├─► {score}───►│  classify() pure fn  │──► category
-         │    Judges      │              └──────────┬───────────┘
-         └────────────────┘                         ▼
-                                         ┌─────────────────────┐
-                                         │  Pre-written content │
-                                         │  (SSG pattern)       │
-                                         └─────────────────────┘
+Image → [VLM Judges] → scores → [classify()] → category → [pre-written content]
+         (parallel)      ↓         (pure fn)       ↓           (instant)
+                      warmth: 7                 "Winter"     "Your palette is
+                      saturation: 8                           bold and striking..."
+                      value: 6
 ```
 
-**Key insight**: VLM does minimal work (feature extraction). Category selection is **deterministic code**. Content is **pre-written**.
+**Key design**: VLMs do minimal work (extract numeric scores). Classification is **deterministic code**. Content is **pre-written** — no generation latency.
 
-## Scripts
+## Features
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start Vite frontend dev server |
-| `bun run server` | Start Bun API server |
-| `bun run generate` | Precompute Barnum-style content |
-| `bun test` | Run all tests |
-| `bun run build` | Build for production |
+- 📊 **Radar chart** visualization of dimensional scores
+- 🎛️ **Interactive sliders** to explore alternative classifications  
+- 📄 **LaTeX-style** typography (via latex.css)
+- ⚡ **Fast** — parallel VLM calls, ~1-2s total latency
+- 🎯 **Deterministic** — temperature 0, reproducible results
 
-## Project Structure
+## Tech Stack
 
-```
-ups/
-├── src/
-│   ├── core/           # Framework (domain-agnostic)
-│   │   ├── types.ts    # Core interfaces
-│   │   ├── judge.ts    # Ax VLM signatures
-│   │   ├── explainer.ts
-│   │   └── orchestrator.ts
-│   ├── tests/          # Test configurations
-│   │   └── color-season.ts
-│   ├── components/     # React UI
-│   └── App.tsx
-├── server/
-│   └── api.ts          # Bun HTTP server
-├── scripts/
-│   └── generate-content.ts  # Content precomputation
-└── tests/              # Unit & integration tests
-```
+| Layer | Tech |
+|-------|------|
+| VLM | Gemini 3 Flash via OpenRouter |
+| Framework | [Ax](https://github.com/ax-llm/ax) (DSPy-like signatures) |
+| Frontend | React + Vite + Tailwind v4 |
+| Server | Bun |
+| Typography | [latex.css](https://latex.now.sh) |
+| Charts | Recharts |
 
 ## Creating New Tests
 
-1. Create a file in `src/tests/`:
-
 ```typescript
+// src/tests/my-test.ts
 export const myTest: VisualTest = {
   id: "my-test",
   name: "What _____ are you?",
+  
   dimensions: [
     { id: "factor1", prompt: "Rate factor 1...", scale: [1, 10] },
+    { id: "factor2", prompt: "Rate factor 2...", scale: [1, 10] },
   ],
+  
   categories: [
     { 
       id: "result-a", 
@@ -83,27 +73,28 @@ export const myTest: VisualTest = {
       content: {
         emoji: "✨",
         headline: "You're Result A!",
-        body: "Explanation...",
+        body: "Pre-written explanation...",
         traits: ["Trait 1", "Trait 2"],
         advice: "Optional tip",
       }
     },
   ],
+  
   classify: (scores) => {
-    // Deterministic logic
+    // Pure function — deterministic logic
     return scores.factor1 > 5 ? "result-a" : "result-b";
   },
 };
 ```
 
-2. Export from `src/tests/index.ts`
-3. Reference by `testId` in the API
+## Scripts
 
-## Environment Variables
-
-```bash
-OPENROUTER_API_KEY=your-key-here
-```
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Frontend dev server |
+| `bun run server` | API server |
+| `bun test` | Run tests |
+| `bun run build` | Production build |
 
 ## License
 
