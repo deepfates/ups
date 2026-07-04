@@ -8,7 +8,7 @@
  * Usage: bun run scripts/generate-content.ts
  */
 
-import { AxAI, ax, f } from "@ax-llm/ax";
+import { AxAI, ax } from "@ax-llm/ax";
 import { colorSeason } from "../src/tests/color-season";
 import type { VisualTest, Category, Dimension } from "../src/core/types";
 import { writeFileSync } from "fs";
