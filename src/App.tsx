@@ -227,8 +227,13 @@ function App() {
   const currentTest = testId ? getTest(testId) : null;
 
   // If test ID is provided but not found, redirect to index
+  useEffect(() => {
+    if (testId && !currentTest) {
+      window.location.hash = "/";
+    }
+  }, [testId, currentTest]);
+
   if (testId && !currentTest) {
-    window.location.hash = "/";
     return null;
   }
 
