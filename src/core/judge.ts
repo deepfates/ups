@@ -3,7 +3,7 @@
  * Runs parallel VLM calls to extract scores and observations from an image.
  */
 
-import { AxAI, ax, type AxFunction } from "@ax-llm/ax";
+import { AxAI, ax } from "@ax-llm/ax";
 import type { Dimension, JudgeResult } from "./types";
 
 /**
