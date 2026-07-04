@@ -87,8 +87,7 @@ export const colorSeason: VisualTest = {
   classify: (scores) => {
     const warmth = scores.warmth ?? 5;
     const saturation = scores.saturation ?? 5;
-    const value = scores.value ?? 5;
-    
+
     const isWarm = warmth >= 6;
     const isBright = saturation >= 6;
     
