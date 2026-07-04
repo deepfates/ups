@@ -5,7 +5,7 @@
  * Run: bun test
  */
 
-import { describe, it, expect, mock } from "bun:test";
+import { describe, it, expect } from "bun:test";
 import type { VisualTest, JudgeResult, Category } from "../src/core/types";
 
 // Mock test for integration testing
