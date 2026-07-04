@@ -8,15 +8,23 @@ import { runVisualTest } from "../src/core/orchestrator";
 import { getTest, tests } from "../src/tests";
 import type { AnalyzeRequest, AnalyzeResponse, VisualTest } from "../src/core/types";
 
-// Initialize AI with OpenRouter
-const ai = new AxAI({
-  name: "openrouter",
-  apiKey: process.env.OPENROUTER_API_KEY ?? "",
-  config: {
-    model: "google/gemini-3-flash-preview",
-    temperature: 0,
-  },
-});
+// Lazily initialize AI with OpenRouter so the server can boot without a key
+let aiInstance: AxAI | null = null;
+
+function getAI(): AxAI | null {
+  if (!process.env.OPENROUTER_API_KEY) {
+    return null;
+  }
+  aiInstance ??= new AxAI({
+    name: "openrouter",
+    apiKey: process.env.OPENROUTER_API_KEY,
+    config: {
+      model: "google/gemini-3-flash-preview",
+      temperature: 0,
+    },
+  });
+  return aiInstance;
+}
 
 const server = Bun.serve({
   port: 3001,
@@ -44,6 +52,12 @@ const server = Bun.serve({
     // Main analyze endpoint
     if (url.pathname === "/api/analyze" && req.method === "POST") {
       try {
+        const ai = getAI();
+        if (!ai) {
+          const response: AnalyzeResponse = { success: false, error: "OPENROUTER_API_KEY not configured" };
+          return Response.json(response, { status: 503, headers: corsHeaders });
+        }
+
         const body = await req.json() as AnalyzeRequest;
         const { testId, image } = body;
         
